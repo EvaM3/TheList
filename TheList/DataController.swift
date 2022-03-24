@@ -10,8 +10,6 @@ import CoreData
 
 
 
-    
-
     // MARK: - Core Data stack
 
      var persistentContainer: NSPersistentContainer = {
@@ -40,6 +38,7 @@ import CoreData
         })
         return container
     }()
+
 
     // MARK: - Core Data Saving support
 

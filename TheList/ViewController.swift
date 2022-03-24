@@ -20,8 +20,6 @@ struct Task {
     
 }
 
-
-
 class ViewController: UIViewController , UITableViewDataSource {
     
     override func viewDidLoad() {
