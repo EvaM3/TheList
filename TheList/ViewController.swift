@@ -91,6 +91,7 @@ class ViewController: UIViewController , UITableViewDataSource {
         
         
         func getTheFullList() {
+            
             do {
                 let list = try managedContext.fetch(ListEntity.fetchRequest())
             } catch {
@@ -141,6 +142,7 @@ class ViewController: UIViewController , UITableViewDataSource {
         
         
         func updateList(title: ListEntity, newName: String) {
+            
             title.title = newName
             
             do {
