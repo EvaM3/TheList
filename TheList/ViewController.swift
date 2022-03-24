@@ -85,12 +85,12 @@ class ViewController: UIViewController , UITableViewDataSource {
         
         alert.addAction(saveAction)
         alert.addAction(cancelAction)
-        
         present(alert, animated: true)
         
         
+    // Core Data
         
-        func getTheFullList() {
+    func getTheFullList() {
             
             do {
                 let list = try managedContext.fetch(ListEntity.fetchRequest())
@@ -100,7 +100,7 @@ class ViewController: UIViewController , UITableViewDataSource {
         }
         
         
-        func createList() {
+    func createList() {
             let newList = ListEntity(context: managedContext)
             newList.title = title
             newList.creationDate = Date()
@@ -113,7 +113,7 @@ class ViewController: UIViewController , UITableViewDataSource {
         }
         
         
-        func saveList(title: ListEntity) {
+    func saveList(title: ListEntity) {
             
             let entity = NSEntityDescription.entity(forEntityName: "PersonEntity", in: managedContext)!
             
