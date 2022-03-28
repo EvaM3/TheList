@@ -124,17 +124,19 @@ class ViewController: UIViewController , UITableViewDataSource {
             do {
                 try managedContext.save()
                 people.append(person)
+                getTheFullList()
             } catch let error as NSError {
                 print("Could not save. \(error), \(error.userInfo)")
             }
         }
         
-        
+    
         func deleteList(title: ListEntity) {
             managedContext.delete(title)
             
             do {
                 try managedContext.save()
+                getTheFullList()
             } catch {
                 print("Could not save. \(error)")
             }
@@ -147,6 +149,7 @@ class ViewController: UIViewController , UITableViewDataSource {
             
             do {
                 try managedContext.save()
+                getTheFullList()
             } catch {
                 print("Could not save. \(error)")
             }
