@@ -10,149 +10,67 @@ import CoreData
 
 
 
-struct Task {
+class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
+   
     
-    var task: String
-    var creationDate: Date
-    var achievedDate: Date?
-    var completed: Bool
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    var listEntityArray = [ListEntity]()
     
-}
-
-class ViewController: UIViewController , UITableViewDataSource {
+    @IBOutlet weak var tableView: UITableView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        func viewWillAppear(_animated: Bool) {
+    func viewWillAppear(_animated: Bool) {
             super.viewWillAppear(_animated)
-            
-            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PersonEntity")
-            
-            do {
-                people = try managedContext.fetch(fetchRequest)
-            } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
-            }
-        }
-        
-        title = "The List"
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+
+        loadData()
+       
     }
-    
-    
-    var people:[NSManagedObject] = []
-    
-    let managedContext = persistentContainer.viewContext
-    
-    // MARK: - UITableViewDataSource
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return people.count
+        return listEntityArray.count
     }
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let person = people[indexPath.row]
-        let cell =
-            tableView.dequeueReusableCell(withIdentifier: "Cell",
-                                          for: indexPath)
-        cell.textLabel?.text = person.value(forKey: "name") as? String
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
         return cell
     }
     
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBAction func addName(_ sender: Any) {
-        
-        
-        let alert = UIAlertController(title: "New Name", message: "Add a new name", preferredStyle: .alert)
-        
-        let saveAction = UIAlertAction(title: "Save", style: .default) {
-            [unowned self] action in
+    @IBAction func addButtonTapped(_ sender: Any) {
+        var textField = UITextField()
+        let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Add task", style: .default) { (action) in
+            let newTask = ListEntity(context: self.context)
+            newTask.title = textField.text
             
-            guard let textField = alert.textFields?.first,
-                  let nameToSave = textField.text else {
-                return
-            }
-            self.tableView.reloadData()
+            self.listEntityArray.append(newTask)
+            self.saveData()
+        }
+        alert.addAction(action)
+        alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
+            textField = alertTextField
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+      present(alert, animated: true, completion: nil)
         
-        alert.addTextField()
-        
-        alert.addAction(saveAction)
-        alert.addAction(cancelAction)
-        present(alert, animated: true)
-        
-        
-    // Core Data
-        
-    func getTheFullList() {
-            
-            do {
-                let list = try managedContext.fetch(ListEntity.fetchRequest())
-            } catch {
-                print("Could not fetch. \(error)")
-            }
-        }
-        
-        
-    func createList() {
-            let newList = ListEntity(context: managedContext)
-            newList.title = title
-            newList.creationDate = Date()
-            
-            do {
-                try managedContext.save()
-            } catch {
-                print("Could not save. \(error)")
-            }
-        }
-        
-        
-    func saveList(title: ListEntity) {
-            
-            let entity = NSEntityDescription.entity(forEntityName: "PersonEntity", in: managedContext)!
-            
-            let person = NSManagedObject(entity: entity, insertInto: managedContext)
-            
-            person.setValue(title, forKey: "name")
-            
-            do {
-                try managedContext.save()
-                people.append(person)
-                getTheFullList()
-            } catch let error as NSError {
-                print("Could not save. \(error), \(error.userInfo)")
-            }
-        }
-        
+    }
     
-        func deleteList(title: ListEntity) {
-            managedContext.delete(title)
-            
-            do {
-                try managedContext.save()
-                getTheFullList()
-            } catch {
-                print("Could not save. \(error)")
-            }
+    func saveData() {
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context \(error)")
         }
+        tableView.reloadData()
+    }
+    
+    func loadData() {
+        let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
         
-        
-        func updateList(title: ListEntity, newName: String) {
-            
-            title.title = newName
-            
-            do {
-                try managedContext.save()
-                getTheFullList()
-            } catch {
-                print("Could not save. \(error)")
-            }
+        do {
+            listEntityArray = try context.fetch(request)
+        } catch {
+            print("Error loading data \(error)")
         }
+        tableView.reloadData()
     }
 }
