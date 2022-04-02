@@ -31,9 +31,25 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
+        let item = listEntityArray[indexPath.row]
+        cell.textLabel?.text = item.title
         return cell
     }
     
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var textField = UITextField()
+        let alert = UIAlertController(title: "Change task", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Update task", style: .default) { (action) in
+            self.listEntityArray[indexPath.row].setValue(textField.text, forKey: "title")
+            self.saveData()
+        }
+        alert.addAction(action)
+        alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
+            textField = alertTextField
+        }
+        
+      present(alert, animated: true, completion: nil)
+    }
     
     @IBAction func addButtonTapped(_ sender: Any) {
         var textField = UITextField()
@@ -72,5 +88,17 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             print("Error loading data \(error)")
         }
         tableView.reloadData()
+    }
+    
+    func deleteData(item: ListEntity) {
+        context.delete(item)
+        
+        do {
+            try context.save()
+            self.saveData()
+        }
+        catch {
+            // Something went wrong, its an error :-(
+        }
     }
 }
