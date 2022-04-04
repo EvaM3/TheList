@@ -18,13 +18,12 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     var listEntityArray = [ListEntity]()
     
     @IBOutlet weak var tableView: UITableView!
-    
-    func viewWillAppear(_animated: Bool) {
-            super.viewWillAppear(_animated)
-
-        loadData()
        
+    override func viewDidLoad() {
+        loadData()
     }
+       
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listEntityArray.count
     }
@@ -76,7 +75,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         } catch {
             print("Error saving context \(error)")
         }
-        tableView.reloadData()
+        loadData()
     }
     
     func loadData() {
