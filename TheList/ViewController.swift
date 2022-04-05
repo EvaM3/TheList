@@ -6,17 +6,16 @@
 //
 
 import UIKit
-import CoreData
+
 
 
 
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
    
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = CoreDataManager.sharedManager.persistentContainer.viewContext
     
     var listEntityArray = [ListEntity]()
-    
     @IBOutlet weak var tableView: UITableView!
        
     override func viewDidLoad() {
@@ -69,35 +68,5 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
     }
     
-    func saveData() {
-        do {
-            try context.save()
-        } catch {
-            print("Error saving context \(error)")
-        }
-        loadData()
-    }
     
-    func loadData() {
-        let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
-        
-        do {
-            listEntityArray = try context.fetch(request)
-        } catch {
-            print("Error loading data \(error)")
-        }
-        tableView.reloadData()
-    }
-    
-    func deleteData(item: ListEntity) {
-        context.delete(item)
-        
-        do {
-            try context.save()
-            self.saveData()
-        }
-        catch {
-            // Something went wrong, its an error :-(
-        }
-    }
 }
