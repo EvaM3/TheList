@@ -68,16 +68,19 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
     }
     
-    func loadData() { //
-       // listEntityArray = coreDataManager.loadData()
-        coreDataManager.loadData()
-        listEntityArray = coreDataManager.listEntityArray
+    func loadData() {
+       let listEntityArray = coreDataManager.loadData()
+        
+        
+//        coreDataManager.loadData()
+//        listEntityArray = coreDataManager.listEntityArray
         tableView.reloadData()
        
     }
     
     func saveData() {
-        
+        coreDataManager.saveData()
+        coreDataManager.loadData()
     }
     
 }
