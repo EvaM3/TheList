@@ -13,8 +13,8 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
    
     
-    let context = CoreDataManager.sharedManager.persistentContainer.viewContext
-    
+   
+    let coreDataManager = CoreDataManager()
     var listEntityArray = [ListEntity]()
     @IBOutlet weak var tableView: UITableView!
        
@@ -53,10 +53,10 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         var textField = UITextField()
         let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add task", style: .default) { (action) in
-            let newTask = ListEntity(context: self.context)
-            newTask.title = textField.text
-            
-            self.listEntityArray.append(newTask)
+//            let newTask = ListEntity(context: self.context)
+//            newTask.title = textField.text
+//
+//            self.listEntityArray.append(newTask)
             self.saveData()
         }
         alert.addAction(action)
@@ -68,5 +68,16 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
     }
     
+    func loadData() { //
+       // listEntityArray = coreDataManager.loadData()
+        coreDataManager.loadData()
+        listEntityArray = coreDataManager.listEntityArray
+        tableView.reloadData()
+       
+    }
+    
+    func saveData() {
+        
+    }
     
 }
