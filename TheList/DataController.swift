@@ -12,9 +12,6 @@ import CoreData
 
 class CoreDataManager {
     
-    
-    var listEntityArray = [ListEntity]()
-    
 
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "ListModel")
@@ -34,16 +31,16 @@ class CoreDataManager {
         } catch {
             print("Error saving context \(error)")
         }
-        loadData()
     }
     
-    func loadData() {
+    func loadData() -> [ListEntity] {
         let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
         
         do {
-            listEntityArray = try persistentContainer.viewContext.fetch(request)
+             return try persistentContainer.viewContext.fetch(request)
         } catch {
             print("Error loading data \(error)")
+            return []
         }
     }
     

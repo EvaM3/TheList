@@ -11,17 +11,17 @@ import UIKit
 
 
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
-   
     
-   
+    
+    
     let coreDataManager = CoreDataManager()
     var listEntityArray = [ListEntity]()
     @IBOutlet weak var tableView: UITableView!
-       
+    
     override func viewDidLoad() {
         loadData()
     }
-       
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listEntityArray.count
@@ -34,7 +34,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         return cell
     }
     
-     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var textField = UITextField()
         let alert = UIAlertController(title: "Change task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Update task", style: .default) { (action) in
@@ -46,17 +46,18 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             textField = alertTextField
         }
         
-      present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func addButtonTapped(_ sender: Any) {
         var textField = UITextField()
         let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add task", style: .default) { (action) in
-        let newTask = ListEntity(context: self.coreDataManager.persistentContainer.viewContext)
-        newTask.title = textField.text
-        self.listEntityArray.append(newTask)
+            let newTask = ListEntity(context: self.coreDataManager.persistentContainer.viewContext)
+            newTask.title = textField.text
+            self.listEntityArray.append(newTask)
             self.saveData()
+            
         }
         
         alert.addAction(action)
@@ -64,21 +65,17 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             textField = alertTextField
         }
         
-      present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
         
     }
     
     func loadData() {
-        
-    listEntityArray = coreDataManager.listEntityArray
-      coreDataManager.loadData()
+        self.listEntityArray = coreDataManager.loadData()
         tableView.reloadData()
-       
     }
     
     func saveData() {
         coreDataManager.saveData()
-        coreDataManager.loadData()
+        self.loadData()
     }
-    
 }
