@@ -53,12 +53,12 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         var textField = UITextField()
         let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add task", style: .default) { (action) in
-//            let newTask = ListEntity(context: self.context)
-//            newTask.title = textField.text
-//
-//            self.listEntityArray.append(newTask)
+        let newTask = ListEntity(context: self.coreDataManager.persistentContainer.viewContext)
+        newTask.title = textField.text
+        self.listEntityArray.append(newTask)
             self.saveData()
         }
+        
         alert.addAction(action)
         alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
             textField = alertTextField
@@ -69,11 +69,9 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     }
     
     func loadData() {
-       let listEntityArray = coreDataManager.loadData()
         
-        
-//        coreDataManager.loadData()
-//        listEntityArray = coreDataManager.listEntityArray
+    listEntityArray = coreDataManager.listEntityArray
+      coreDataManager.loadData()
         tableView.reloadData()
        
     }
