@@ -12,7 +12,12 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
-    
+    struct ListEntityUI {
+        var title: String
+        var isCompleted: Bool
+        var creationDate: Date
+        var achievedDate: Date
+    }
     
     let coreDataManager = CoreDataManager()
     var listEntityArray = [ListEntity]()

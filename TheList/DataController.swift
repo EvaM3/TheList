@@ -8,10 +8,9 @@
 
 import CoreData
 
-
-
 class CoreDataManager {
     
+    var entityArray = ViewController.ListEntityUI.self
 
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "ListModel")
