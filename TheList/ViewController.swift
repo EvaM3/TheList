@@ -8,19 +8,22 @@
 import UIKit
 
 
+struct ListEntityUI {
+    var title: String
+    var isCompleted: Bool?
+    var creationDate: Date?
+    var achievedDate: Date?
+    
+}
 
 
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
-    struct ListEntityUI {
-        var title: String
-        var isCompleted: Bool
-        var creationDate: Date
-        var achievedDate: Date
-    }
+    
+  
     
     let coreDataManager = CoreDataManager()
-    var listEntityArray = [ListEntity]()
+    var listEntityArray = [ListEntityUI]()
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -43,7 +46,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         var textField = UITextField()
         let alert = UIAlertController(title: "Change task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Update task", style: .default) { (action) in
-            self.listEntityArray[indexPath.row].setValue(textField.text, forKey: "title")
+            self.listEntityArray[indexPath.row].title = textField.text ?? ""
             self.saveData()
         }
         alert.addAction(action)
@@ -58,8 +61,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         var textField = UITextField()
         let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add task", style: .default) { (action) in
-            let newTask = ListEntity(context: self.coreDataManager.persistentContainer.viewContext)
-            newTask.title = textField.text
+            let newTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
             self.listEntityArray.append(newTask)
             self.saveData()
             
@@ -73,7 +75,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         present(alert, animated: true, completion: nil)
         
     }
-    
+    // func map(item: ListEntity) -> ListEntityUI {}
     func loadData() {
         self.listEntityArray = coreDataManager.loadData()
         tableView.reloadData()

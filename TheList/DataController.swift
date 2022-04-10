@@ -8,10 +8,13 @@
 
 import CoreData
 
+
 class CoreDataManager {
     
-    var entityArray = ViewController.ListEntityUI.self
-
+    var listEntityUI = ViewController.ListEntityUI.self
+    
+   
+    
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "ListModel")
         
@@ -23,8 +26,9 @@ class CoreDataManager {
         return container
     }()
     
-    
-    func saveData() {
+
+    func saveData(listEntityUI: ViewController.ListEntityUI) {
+        
         do {
             try persistentContainer.viewContext.save()
         } catch {
