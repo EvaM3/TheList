@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 
 struct ListEntityUI {
@@ -15,12 +16,19 @@ struct ListEntityUI {
     var achievedDate: Date?
     
 }
-
+extension ListEntityUI {
+    init(mapListEntityUI : ListEntity) {
+        self.title = mapListEntityUI.title ?? ""
+        self.isCompleted = mapListEntityUI.isCompleted
+        self.achievedDate = mapListEntityUI.achievedDate
+        self.creationDate = mapListEntityUI.creationDate
+    }
+}
 
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
     
-  
+    
     
     let coreDataManager = CoreDataManager()
     var listEntityArray = [ListEntityUI]()
@@ -62,8 +70,8 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add task", style: .default) { (action) in
             let newTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
-            self.listEntityArray.append(newTask)
-            self.saveData()
+            self.coreDataManager.addItem(item: newTask)
+            self.loadData()
             
         }
         
@@ -75,14 +83,31 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         present(alert, animated: true, completion: nil)
         
     }
-    // func map(item: ListEntity) -> ListEntityUI {}
-    func loadData() {
-        self.listEntityArray = coreDataManager.loadData()
+    
+    
+    
+    func map(item: ListEntity) -> ListEntityUI {
+        
+        let newListEntity = ListEntityUI(mapListEntityUI: item)
+        return newListEntity
+        
+    }
+    
+    
+    func loadData(){
+        listEntityArray = []
+        for item in coreDataManager.loadData() {
+            let newMap = map(item: item)
+            listEntityArray.append(newMap)
+            
+        }
         tableView.reloadData()
     }
+    
     
     func saveData() {
         coreDataManager.saveData()
         self.loadData()
+        
     }
 }

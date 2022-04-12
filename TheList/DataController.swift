@@ -11,9 +11,7 @@ import CoreData
 
 class CoreDataManager {
     
-    var listEntityUI = ViewController.ListEntityUI.self
     
-   
     
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "ListModel")
@@ -27,7 +25,7 @@ class CoreDataManager {
     }()
     
 
-    func saveData(listEntityUI: ViewController.ListEntityUI) {
+    func saveData() {
         
         do {
             try persistentContainer.viewContext.save()
@@ -45,6 +43,12 @@ class CoreDataManager {
             print("Error loading data \(error)")
             return []
         }
+    }
+    
+    func addItem(item: ListEntityUI) {
+        let newItem = ListEntity(context: persistentContainer.viewContext)
+        newItem.title = item.title
+        saveData()
     }
     
     func deleteData(item: ListEntity) {
