@@ -32,6 +32,7 @@ class CoreDataManager {
         } catch {
             print("Error saving context \(error)")
         }
+        
     }
     
     func loadData() -> [ListEntity] {
@@ -61,6 +62,20 @@ class CoreDataManager {
         catch {
             // Something went wrong, its an error :-(
         }
+    }
+    
+    func updateData(item: ListEntityUI) {
+        let newTask = ListEntity(context: persistentContainer.viewContext)
+        newTask.title = item.title
+        
+        do {
+            try persistentContainer.viewContext.save()
+            self.saveData()
+        }
+        catch {
+            // Something went wrong, its an error :-(
+        }
+        
     }
     
 }

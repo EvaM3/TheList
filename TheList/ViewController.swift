@@ -54,9 +54,12 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         var textField = UITextField()
         let alert = UIAlertController(title: "Change task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Update task", style: .default) { (action) in
+            let changedTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
             self.listEntityArray[indexPath.row].title = textField.text ?? ""
-            self.saveData()
+            self.coreDataManager.updateData(item: changedTask)
+            self.loadData()
         }
+        
         alert.addAction(action)
         alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
             textField = alertTextField
@@ -110,4 +113,5 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         self.loadData()
         
     }
+    
 }
