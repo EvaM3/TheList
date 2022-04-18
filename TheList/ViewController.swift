@@ -36,6 +36,11 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     
     override func viewDidLoad() {
         loadData()
+       
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+       
     }
     
     
@@ -51,21 +56,31 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let item = listEntityArray[indexPath.row]
         var textField = UITextField()
-        let alert = UIAlertController(title: "Change task", message: "", preferredStyle: .alert)
+        let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in
+        } ))
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+          //  self.coreDataManager.deleteData(item: )
+        }))
         let action = UIAlertAction(title: "Update task", style: .default) { (action) in
-            let changedTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
-            self.listEntityArray[indexPath.row].title = textField.text ?? ""
-            self.coreDataManager.updateData(item: changedTask)
+            let newTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
+            self.coreDataManager.addItem(item: newTask)
             self.loadData()
+//            let changedTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
+//            self.listEntityArray[indexPath.row].title = textField.text ?? ""
+//            self.loadData()
         }
         
-        alert.addAction(action)
-        alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
+        sheet.addAction(action)
+        sheet.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
             textField = alertTextField
         }
         
-        present(alert, animated: true, completion: nil)
+        present(sheet, animated: true, completion: nil)
     }
     
     @IBAction func addButtonTapped(_ sender: Any) {
