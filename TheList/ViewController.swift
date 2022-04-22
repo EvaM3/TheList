@@ -36,11 +36,11 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     
     override func viewDidLoad() {
         loadData()
-       
+        
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-       
+        
     }
     
     
@@ -58,30 +58,31 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = listEntityArray[indexPath.row]
+        
         var textField = UITextField()
-        let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .actionSheet)
+        
+        let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .alert)
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in
+            let alert = UIAlertController(title: "Update task", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Update your task", style: .default, handler: { _ in
+                self.coreDataManager.updateData(at: indexPath.row , title: textField.text ?? "")
+                self.loadData()
+            }))
+            
+            self.present(alert, animated: true)
+            alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
+                textField = alertTextField
+            }
+            alert.textFields?.first?.text = item.title
         } ))
         sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-          //  self.coreDataManager.deleteData(item: )
-        }))
-        let action = UIAlertAction(title: "Update task", style: .default) { (action) in
-            let newTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
-            self.coreDataManager.addItem(item: newTask)
+            self.coreDataManager.deleteData(at: indexPath.row)
             self.loadData()
-//            let changedTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
-//            self.listEntityArray[indexPath.row].title = textField.text ?? ""
-//            self.loadData()
-        }
-        
-        sheet.addAction(action)
-        sheet.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
-            textField = alertTextField
-        }
-        
+        }))
         present(sheet, animated: true, completion: nil)
     }
+    
     
     @IBAction func addButtonTapped(_ sender: Any) {
         var textField = UITextField()
@@ -101,7 +102,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         present(alert, animated: true, completion: nil)
         
     }
-    
     
     
     func map(item: ListEntity) -> ListEntityUI {

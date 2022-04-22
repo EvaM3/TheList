@@ -24,7 +24,7 @@ class CoreDataManager {
         return container
     }()
     
-
+    
     func saveData() {
         
         do {
@@ -39,7 +39,7 @@ class CoreDataManager {
         let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
         
         do {
-             return try persistentContainer.viewContext.fetch(request)
+            return try persistentContainer.viewContext.fetch(request)
         } catch {
             print("Error loading data \(error)")
             return []
@@ -52,29 +52,19 @@ class CoreDataManager {
         saveData()
     }
     
-    func deleteData(item: ListEntity) {
-        persistentContainer.viewContext.delete(item)
-        
-        do {
-            try persistentContainer.viewContext.save()
-            self.saveData()
-        }
-        catch {
-            // Something went wrong, its an error :-(
-        }
+    func deleteData(at index: Int) {
+        let loadedData = loadData()
+        let selectedTask = loadedData[index]
+        persistentContainer.viewContext.delete(selectedTask)
+        self.saveData()
     }
     
-    func updateData(item: ListEntityUI) {
-        let newTask = ListEntity(context: persistentContainer.viewContext)
-        newTask.title = item.title
+    func updateData(at index: Int, title: String) {
+        let loadedData = loadData()
+        let selectedTask = loadedData[index]
+        selectedTask.title = title
         
-        do {
-            try persistentContainer.viewContext.save()
-            self.saveData()
-        }
-        catch {
-            // Something went wrong, its an error :-(
-        }
+        self.saveData()
         
     }
     
