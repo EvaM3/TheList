@@ -59,11 +59,14 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         tableView.deselectRow(at: indexPath, animated: true)
         let item = listEntityArray[indexPath.row]
         
+        func changeCancelAndEditTasks() -> UIAlertController {
         var textField = UITextField()
         
         let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .alert)
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in  } ))
+    
+        func updateTasks() -> UIAlertController {
             let alert = UIAlertController(title: "Update task", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Update your task", style: .default, handler: { _ in
                 self.coreDataManager.updateData(at: indexPath.row , title: textField.text ?? "")
@@ -75,14 +78,17 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
                 textField = alertTextField
             }
             alert.textFields?.first?.text = item.title
-        } ))
+    return alert
+        }
+        
         sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             self.coreDataManager.deleteData(at: indexPath.row)
             self.loadData()
         }))
         present(sheet, animated: true, completion: nil)
+        return sheet
     }
-    
+    }
     
     @IBAction func addButtonTapped(_ sender: Any) {
         var textField = UITextField()
