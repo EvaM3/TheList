@@ -77,7 +77,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         }
         
         present(alert, animated: true, completion: nil)
-        
     }
     
     func updateTasks(indexPath: IndexPath) -> UIAlertController {
@@ -101,13 +100,11 @@ return alert
     let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .alert)
     sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in  } ))
-
-    
     sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
         self.coreDataManager.deleteData(at: indexPath.row)
         self.loadData()
     }))
-    present(sheet, animated: true, completion: nil)
+        self.present(sheet, animated: true, completion: nil)
     return sheet
 }
     
@@ -116,7 +113,6 @@ return alert
         
         let newListEntity = ListEntityUI(mapListEntityUI: item)
         return newListEntity
-        
     }
     
     
@@ -136,5 +132,4 @@ return alert
         self.loadData()
         
     }
-    
 }
