@@ -37,7 +37,8 @@ class CoreDataManager {
     
     func loadData() -> [ListEntity] {
         let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
-        
+        let predicate = NSPredicate(format: "title > %@", "K")
+        request.predicate = predicate
         do {
             return try persistentContainer.viewContext.fetch(request)
         } catch {

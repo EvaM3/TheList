@@ -57,8 +57,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        updateTasks(indexPath: indexPath)
-        changeCancelAndEditTasks(indexPath: indexPath)
+        self.present(changeCancelAndEditTasks(indexPath: indexPath), animated: true)
     }
     
     @IBAction func addButtonTapped(_ sender: Any) {
@@ -88,25 +87,27 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             self.loadData()
         }))
         
-        self.present(alert, animated: true)
+        
         alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
             textField = alertTextField
         }
         alert.textFields?.first?.text = item.title
-return alert
+        return alert
     }
     
     func changeCancelAndEditTasks(indexPath: IndexPath) -> UIAlertController {
-    let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .alert)
-    sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in  } ))
-    sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-        self.coreDataManager.deleteData(at: indexPath.row)
-        self.loadData()
-    }))
-        self.present(sheet, animated: true, completion: nil)
-    return sheet
-}
+        let sheet = UIAlertController(title: "Change task", message: nil, preferredStyle: .alert)
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in
+            self.present(self.updateTasks(indexPath: indexPath), animated: true)
+        } ))
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            self.coreDataManager.deleteData(at: indexPath.row)
+            self.loadData()
+        }))
+        
+        return sheet
+    }
     
     
     func map(item: ListEntity) -> ListEntityUI {
