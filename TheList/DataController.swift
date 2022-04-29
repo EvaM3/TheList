@@ -47,6 +47,20 @@ class CoreDataManager {
         }
     }
     
+    func loadDataForToday() -> [ListEntity] {
+        var now: Date { Date() }
+        let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+        let predicate = NSPredicate(format: "now > %@")
+        request.predicate = predicate
+        do {
+            return try persistentContainer.viewContext.fetch(request)
+        } catch {
+            print("Error loading data \(error)")
+            return []
+        }
+    }
+    
+    
     func addItem(item: ListEntityUI) {
         let newItem = ListEntity(context: persistentContainer.viewContext)
         newItem.title = item.title
