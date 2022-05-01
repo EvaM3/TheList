@@ -35,9 +35,8 @@ class CoreDataManager {
         
     }
     
-    func loadData() -> [ListEntity] {
+    func loadData(predicate: NSPredicate? = nil) -> [ListEntity] {
         let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
-        let predicate = NSPredicate(format: "title > %@", "K")
         request.predicate = predicate
         do {
             return try persistentContainer.viewContext.fetch(request)
@@ -46,20 +45,23 @@ class CoreDataManager {
             return []
         }
     }
-    
-    func loadDataForToday() -> [ListEntity] {
-        var now: Date { Date() }
-        let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
-        let predicate = NSPredicate(format: "now > %@")
-        request.predicate = predicate
-        do {
-            return try persistentContainer.viewContext.fetch(request)
-        } catch {
-            print("Error loading data \(error)")
-            return []
-        }
-    }
-    
+//
+//    func loadDataForToday(predicate: NSPredicate?) -> [ListEntity] {
+//        var now: Date { Date() }
+//        let request : NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+////        let predicate: NSPredicate? = NSPredicate(format: "now > %@")
+//        request.predicate = predicate
+//        if predicate == nil {
+//
+//        }
+//        do {
+//            return try persistentContainer.viewContext.fetch(request)
+//        } catch {
+//            print("Error loading data \(error)")
+//            return []
+//        }
+//    }
+//
     
     func addItem(item: ListEntityUI) {
         let newItem = ListEntity(context: persistentContainer.viewContext)
