@@ -117,7 +117,10 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     }
     
     
-    func loadData(){
+    func loadData(predicate: NSPredicate? = nil) {
+        let pred =  NSPredicate(format: "title > %@")
+        let filter = coreDataManager.loadData(predicate: pred)
+       
         listEntityArray = []
         for item in coreDataManager.loadData() {
             let newMap = map(item: item)
