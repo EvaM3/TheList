@@ -64,7 +64,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         var textField = UITextField()
         let alert = UIAlertController(title: "Add new task", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add task", style: .default) { (action) in
-            let newTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: Date())
+            let newTask = ListEntityUI(title: textField.text ?? "", isCompleted: false, creationDate: Date(), achievedDate: nil)
             self.coreDataManager.addItem(item: newTask)
             self.loadData()
             
@@ -117,12 +117,13 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     }
     
     
-    func loadData(predicate: NSPredicate? = nil) {
-        let pred =  NSPredicate(format: "title > %@")
-        let filter = coreDataManager.loadData(predicate: pred)
+    func loadData() {
+        let pred =  NSPredicate(format: "title < %@","B")
+        let filteredFetchResult = coreDataManager.loadData(predicate: pred)
+        
        
         listEntityArray = []
-        for item in coreDataManager.loadData() {
+        for item in filteredFetchResult {
             let newMap = map(item: item)
             listEntityArray.append(newMap)
             
