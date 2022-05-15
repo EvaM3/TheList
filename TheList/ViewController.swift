@@ -116,6 +116,13 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         return newListEntity
     }
     
+    func loadSortedData() {
+        let todaysSortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
+        let sortDescriptors = [todaysSortDescriptor]
+    
+    }
+    
+    
     
     func loadData() {
         let pred =  NSPredicate(format: "title < %@","B")
@@ -128,6 +135,22 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             listEntityArray.append(newMap)
             
         }
+        tableView.reloadData()
+    }
+    
+    func fetchForToday() {
+        let startDate = Date()
+        let pred =  NSPredicate(format: "creationDate >= %@", startDate as CVarArg)
+        let filteredFetchResult = coreDataManager.loadData(predicate: pred)
+       loadSortedData()
+        
+        tableView.reloadData()
+    }
+    
+    func fetchForYesterday() {
+        let pred =  NSPredicate(format: "creationDate < %@","Date")
+        let filteredFetchResult = coreDataManager.loadData(predicate: pred)
+        loadSortedData()
         tableView.reloadData()
     }
     
