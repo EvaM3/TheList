@@ -25,6 +25,22 @@ extension ListEntityUI {
     }
 }
 
+extension Date {
+    var currentDay: Date {
+        return Calendar.current.date(byAdding: .day, value: 0, to: self)!
+    }
+    var dayAfter: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: self)!
+    }
+    var dayBefore: Date {
+        return Calendar.current.date(byAdding: .day, value: -1, to: self)!
+    }
+}
+
+let tomorrow = Date().dayAfter
+let yesterday = Date().dayBefore
+let today = Date().currentDay
+
 class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
     
@@ -70,6 +86,9 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             
         }
         
+        
+        
+        
         alert.addAction(action)
         alert.addTextField { (alertTextField) in alertTextField.placeholder = "New task here"
             textField = alertTextField
@@ -77,6 +96,18 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
         present(alert, animated: true, completion: nil)
     }
+    
+    @IBAction func todayButtonTapped(_ sender: Any) {
+        
+    }
+    
+    @IBAction func yesterdayButtonTapped(_ sender: Any) {
+        
+        
+        
+    }
+    
+    
     
     func updateTasks(indexPath: IndexPath) -> UIAlertController {
         let item = listEntityArray[indexPath.row]
@@ -119,7 +150,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     func loadSortedData() {
         let todaysSortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         let sortDescriptors = [todaysSortDescriptor]
-    
+        
     }
     
     
@@ -128,7 +159,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         let pred =  NSPredicate(format: "title < %@","B")
         let filteredFetchResult = coreDataManager.loadData(predicate: pred)
         
-       
+        
         listEntityArray = []
         for item in filteredFetchResult {
             let newMap = map(item: item)
@@ -140,15 +171,21 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     
     func fetchForToday() {
         let startDate = Date()
-        let pred =  NSPredicate(format: "creationDate >= %@", startDate as CVarArg)
+        if #available(iOS 15.0, *) {
+            let currentTime = startDate.formatted(date: .omitted, time: .standard)
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        let pred =  NSPredicate(format: "creationDate == creationDate", today as CVarArg)
         let filteredFetchResult = coreDataManager.loadData(predicate: pred)
-       loadSortedData()
+        loadSortedData()
         
         tableView.reloadData()
     }
     
     func fetchForYesterday() {
-        let pred =  NSPredicate(format: "creationDate < %@","Date")
+        let pred =  NSPredicate(format: "creationDate = %@", yesterday as CVarArg)
         let filteredFetchResult = coreDataManager.loadData(predicate: pred)
         loadSortedData()
         tableView.reloadData()
